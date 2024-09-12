@@ -5,7 +5,7 @@ import { openDB } from 'idb';
 
 export default function Home() {
   const [coords, setCoords] = useState({ latitude: '', longitude: '' });
-  const [isOnline, setIsOnline] = useState(true);
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [db, setDb] = useState(null);
 
   useEffect(() => {
@@ -33,6 +33,18 @@ export default function Home() {
     };
   }, []);
 
+  const checkConnection = async () => {
+    setIsChecking(true);
+    try {
+      const response = await fetch('https://jsonplaceholder.typicode.com/posts', { method: 'HEAD' });
+      return response.ok;
+    } catch (error) {
+      return false;
+    } finally {
+      setIsChecking(false);
+    }
+  };
+
   const getCoords = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -48,7 +60,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(isOnline)
+    const isServerOnline = await checkConnection();
     const formData = {
       latitude: coords.latitude,
       longitude: coords.longitude,
@@ -57,7 +69,7 @@ export default function Home() {
     await db.add('forms', formData);
     const forms = await db.getAll('forms');
     forms.forEach(async (form) => console.log(form))
-    if (isOnline) {
+    if (isServerOnline) {
       await sendDataToServer(formData);
     } else {
       await db.add('forms', formData);
