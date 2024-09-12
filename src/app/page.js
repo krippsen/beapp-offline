@@ -66,15 +66,16 @@ export default function Home() {
       latitude: coords.latitude,
       longitude: coords.longitude,
       timestamp: new Date().toISOString(),
-    };
-    await db.add('forms', formData);
-    const forms = await db.getAll('forms');
-    forms.forEach(async (form) => console.log(form))
+    };    
+    
     if (isServerOnline) {
       await sendDataToServer(formData);
+      console.log(formData)
       alert("Formulář odeslán")
     } else {
       await db.add('forms', formData);
+      const forms = await db.getAll('forms');
+      forms.forEach(async (form) => console.log(form))
       alert("Formulář bude odeslán až budete online")
     }
     
