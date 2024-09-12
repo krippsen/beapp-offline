@@ -72,11 +72,12 @@ export default function Home() {
     forms.forEach(async (form) => console.log(form))
     if (isServerOnline) {
       await sendDataToServer(formData);
+      alert("Formulář odeslán")
     } else {
       await db.add('forms', formData);
-
+      alert("Formulář bude odeslán až budete online")
     }
-    alert("Formulář odeslán")
+    
   };
 
   const sendDataToServer = async (formData) => {
