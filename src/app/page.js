@@ -5,7 +5,7 @@ import { openDB } from 'idb';
 
 export default function Home() {
   const [coords, setCoords] = useState({ latitude: '', longitude: '' });
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [isOnline, setIsOnline] = useState(typeof window !== 'undefined' ? navigator.onLine : true);
   const [db, setDb] = useState(null);
 
   useEffect(() => {
