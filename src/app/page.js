@@ -9,7 +9,6 @@ export default function Home() {
   const [db, setDb] = useState(null);
 
   useEffect(() => {
-    // Initialize IndexedDB on mount
     const initDB = async () => {
       const database = await openDB('formDB', 1, {
         upgrade(db) {
@@ -22,7 +21,6 @@ export default function Home() {
     };
     initDB();
 
-    // Network status listener
     const handleOnline = () => setIsOnline(true);
     const handleOffline = () => setIsOnline(false);
 
@@ -56,43 +54,29 @@ export default function Home() {
       longitude: coords.longitude,
       timestamp: new Date().toISOString(),
     };
-
+    await db.add('forms', formData);
+    const forms = await db.getAll('forms');
+    forms.forEach(async (form) => console.log(form))
     if (isOnline) {
-      // Send data to server
       await sendDataToServer(formData);
     } else {
-      // Save to IndexedDB
       await db.add('forms', formData);
     }
   };
 
   const sendDataToServer = async (formData) => {
-    try {
-      const response = await fetch('/api/submit', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      console.log('Data sent successfully!');
-    } catch (error) {
-      console.error('Failed to send data:', error);
-    }
+    //sendData on hook Make.com
+    console.log("Data to webhook")
   };
 
   const syncOfflineData = async () => {
     const forms = await db.getAll('forms');
     forms.forEach(async (form) => {
       await sendDataToServer(form);
-      await db.delete('forms', form.id); // Remove after sync
+      await db.delete('forms', form.id);
     });
   };
 
-  // Sync data when going online
   useEffect(() => {
     if (isOnline && db) {
       syncOfflineData();
@@ -110,12 +94,12 @@ export default function Home() {
           <label>Longitude: {coords.longitude}</label>
         </div>
         <button type="button" onClick={getCoords}>
-          Get GPS Coordinates
+          Získej GPS souřadnice
         </button>
         <br></br>
-        <button type="submit">Submit</button>
+        <button type="submit">Poslat</button>
       </form>
-      {!isOnline && <p>You are offline. Your data will be sent when you&#39;re back online.</p>}
+      {!isOnline && <p>Jste offline, vaše data budou poslány až budete online</p>}
     </div>
   );
 }
