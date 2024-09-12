@@ -48,7 +48,7 @@ export default function Home() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    console.log(isOnline)
     const formData = {
       latitude: coords.latitude,
       longitude: coords.longitude,
@@ -61,7 +61,9 @@ export default function Home() {
       await sendDataToServer(formData);
     } else {
       await db.add('forms', formData);
+
     }
+    alert("Formulář odeslán")
   };
 
   const sendDataToServer = async (formData) => {
