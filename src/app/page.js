@@ -97,7 +97,7 @@ export default function Home() {
     if (isOnline && db) {
       syncOfflineData();
     }
-  }, [isOnline, db]);
+  }, [isOnline, db, syncOfflineData]);
 
   return (
     <div>
