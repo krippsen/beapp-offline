@@ -7,6 +7,7 @@ export default function Home() {
   const [coords, setCoords] = useState({ latitude: '', longitude: '' });
   const [isOnline, setIsOnline] = useState(typeof window !== 'undefined' ? navigator.onLine : true);
   const [db, setDb] = useState(null);
+  const [isChecking, setIsChecking] = useState(false);
 
   useEffect(() => {
     const initDB = async () => {
