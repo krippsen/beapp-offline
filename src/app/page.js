@@ -115,7 +115,7 @@ export default function Home() {
         <br></br>
         <button type="submit">Submit</button>
       </form>
-      {!isOnline && <p>You are offline. Your data will be sent when you're back online.</p>}
+      {!isOnline && <p>You are offline. Your data will be sent when you&#39;re back online.</p>}
     </div>
   );
 }
